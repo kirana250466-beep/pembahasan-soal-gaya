@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Animasi Pembahasan Soal Fisika</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--tx:#1b2333;--mut:#5b6678;--ac:#e8590c;--ok:#2b9348;--bad:#d62828;--bd:#dde2ee;--chip:#eef1f8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141f;--card:#1a2030;--tx:#eef1f8;--mut:#9aa6bd;--bd:#2c3550;--ac:#ff922b;--chip:#252d44}}
+:root[data-theme="dark"]{--bg:#10141f;--card:#1a2030;--tx:#eef1f8;--mut:#9aa6bd;--bd:#2c3550;--ac:#ff922b;--chip:#252d44}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:.2em 0 .1em;line-height:1.2}
+.sub{color:var(--mut);margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px}
+.given{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{background:var(--chip);border-radius:999px;padding:3px 12px;font-size:.9rem}
+canvas{width:100%;max-width:480px;aspect-ratio:1;display:block;margin:0 auto;border-radius:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+label{display:block;font-size:.9rem;color:var(--mut)}
+label b{color:var(--tx)}
+input[type=range]{width:100%;accent-color:var(--ac)}
+.pre{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button{font:inherit;border:1px solid var(--bd);background:var(--chip);color:var(--tx);border-radius:10px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--ac)}
+button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+.bar{height:22px;border-radius:7px;background:var(--chip);overflow:hidden;margin:3px 0 10px}
+.bar i{display:block;height:100%;border-radius:7px;transition:width .15s;color:#fff;font-size:.75rem;line-height:22px;padding-left:8px;white-space:nowrap}
+.st{font-weight:700;padding:8px 12px;border-radius:10px;margin-top:2px}
+.ok{background:rgba(43,147,72,.16);color:var(--ok)}.no{background:rgba(214,40,40,.16);color:var(--bad)}
+.f{background:var(--chip);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:1.1rem;overflow-x:auto;white-space:nowrap}
+.rad{border-top:1.6px solid currentColor;padding:0 2px}
+.note{font-size:.88rem;color:var(--mut);border-left:3px solid var(--ac);padding-left:10px;margin:8px 0 0}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px}
+.dots{display:flex;gap:6px}.dots i{width:9px;height:9px;border-radius:50%;background:var(--bd)}.dots i.on{background:var(--ac)}
+#sb,#sb2{animation:fd .35s}@keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ans{text-align:center;font-weight:700;font-size:1.1rem}[hidden]{display:none!important}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}#c2{aspect-ratio:8/5;max-width:560px}
+</style></head><body><div class="w">
+<div class="tabs"><button id="t1" class="p">🚗 Soal 1: Tikungan</button><button id="t2">🪀 Soal 2: Yoyo dan Batang</button></div>
+<section id="p1">
+<h1>🚗 Mobil di Tikungan Datar</h1>
+<p class="sub">Berapa kecepatan maksimum agar mobil tidak keluar jalur di posisi M?</p>
+<div class="card"><b>Diketahui:</b> koefisien gesek statis μ = 0,5 · g = 10 m/s² · jari-jari lintasan M, r = 40 m
+<div class="given"><span class="chip">🟡 panah kuning = gaya gesek ke pusat</span><span class="chip">🔵 panah biru = arah kecepatan</span></div></div>
+
+<div class="card">
+<canvas id="c" aria-label="Animasi mobil melintasi tikungan melingkar dari atas"></canvas>
+<div class="row">
+<div><label>Kecepatan mobil: <b id="vt"></b></label><input id="v" type="range" min="5" max="20" step="0.1" value="10"></div>
+<div><label>Massa mobil: <b id="mt"></b></label><input id="m" type="range" min="500" max="2500" step="50" value="1000"></div>
+</div>
+<div class="pre"><button id="b1">🐢 Pelan (10 m/s)</button><button id="b2">🎯 Tepat di batas</button><button id="b3">🚀 Ngebut (18 m/s)</button></div>
+</div>
+
+<div class="card">
+<label>Gaya sentripetal yang <b>dibutuhkan</b> (m v² / r)</label>
+<div class="bar"><i id="g1" style="background:#1971c2"></i></div>
+<label>Gesekan statis <b>maksimum</b> yang tersedia (μ m g)</label>
+<div class="bar"><i id="g2" style="background:#e8590c"></i></div>
+<div id="stt" class="st"></div>
+</div>
+
+<div class="card"><div id="sb"></div>
+<div class="nav"><button id="pv">◀ Sebelumnya</button><div class="dots" id="dt"></div><button class="p" id="nx">Berikutnya ▶</button></div></div>
+<p class="sub" style="font-size:.85rem">Gerak pada animasi sedikit dipercepat agar mudah dilihat. Pandangan dari atas (bird’s-eye view).</p>
+</section>
+<section id="p2" hidden>
+<h1>🪀 Yoyo yang Mendorong Batang</h1>
+<p class="sub">Bagaimana laju perubahan sudut batang, dθ/dt, bergantung pada θ?</p>
+<div class="card"><b>Soal:</b> yoyo (jari-jari luar R, jari-jari dalam r) ditarik di atas meja tanpa slip dengan kecepatan benang horizontal konstan v. Sebuah batang berpivot di engsel O dan bersandar pada yoyo. Tentukan dθ/dt sebagai fungsi θ.
+<div class="given"><span class="chip">🔴 panah merah = kecepatan benang v</span><span class="chip">🟢 panah hijau = kecepatan pusat yoyo</span></div></div>
+<div class="card"><canvas id="c2" aria-label="Animasi yoyo menggelinding mendorong batang, tampak samping"></canvas>
+<div class="given" id="o2" style="justify-content:center;margin-top:10px"></div>
+<div class="row"><div><label>Kecepatan benang v: <b id="v2t"></b></label><input id="v2" type="range" min="0.1" max="0.5" step="0.05" value="0.3"></div>
+<div><label>Jari-jari dalam r: <b id="r2t"></b></label><input id="r2" type="range" min="1" max="9" step="1" value="5"></div></div></div>
+<div class="card"><div id="sb2"></div>
+<div class="nav"><button id="pv2">◀ Sebelumnya</button><div class="dots" id="dt2"></div><button class="p" id="nx2">Berikutnya ▶</button></div></div>
+<p class="sub" style="font-size:.85rem">Gerak diperlambat agar mudah diamati. Tampak dari samping. Contoh angka: R = 10 cm.</p>
+</section>
+</div>
+<script>
+const $=i=>document.getElementById(i);
+const cv=$('c'),x=cv.getContext('2d');cv.width=cv.height=960;x.scale(2,2);
+const mu=.5,g=10,R=40,S=4.4,C=240,VM=Math.sqrt(mu*g*R),K=1.6;
+let v=10,m=1000,th=-Math.PI/2,run=0,slip=false,px=0,py=0,wait=0,sp=0,last=0,step=0;
+const fm=(n,d=1)=>n.toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d});
+function upd(){
+ const need=m*v*v/R,lim=mu*m*g,mx=Math.max(need,lim);
+ $('vt').textContent=fm(v)+' m/s ('+fm(v*3.6,0)+' km/jam)';$('mt').textContent=fm(m,0)+' kg';
+ $('g1').style.width=(need/mx*100)+'%';$('g1').textContent=fm(need,0)+' N';
+ $('g2').style.width=(lim/mx*100)+'%';$('g2').textContent=fm(lim,0)+' N';
+ const ok=v<=VM+.005,s=$('stt');
+ s.className='st '+(ok?'ok':'no');
+ s.textContent=ok?'✅ Aman: gesekan masih cukup untuk menahan mobil di lintasan.':'⚠️ Bahaya: gaya yang dibutuhkan melebihi gesekan maksimum, mobil tergelincir keluar jalur!';
+}
+function arrow(x0,y0,x1,y1,c){
+ const a=Math.atan2(y1-y0,x1-x0);
+ x.strokeStyle=c;x.fillStyle=c;x.lineWidth=4;x.beginPath();x.moveTo(x0,y0);x.lineTo(x1,y1);x.stroke();
+ x.beginPath();x.moveTo(x1,y1);x.lineTo(x1-10*Math.cos(a-.45),y1-10*Math.sin(a-.45));x.lineTo(x1-10*Math.cos(a+.45),y1-10*Math.sin(a+.45));x.fill();
+}
+function lab(t,a,b,al){x.font='bold 13px system-ui,sans-serif';x.textAlign=al||'center';x.lineWidth=3.5;x.strokeStyle='rgba(0,0,0,.65)';x.strokeText(t,a,b);x.fillStyle='#fff';x.fillText(t,a,b)}
+function draw(){
+ x.clearRect(0,0,480,480);x.fillStyle='#3f7d4e';x.fillRect(0,0,480,480);
+ x.beginPath();x.arc(C,C,50*S,0,7);x.moveTo(C+30*S,C);x.arc(C,C,30*S,0,7);x.fillStyle='#4a4f5a';x.fill('evenodd');
+ x.strokeStyle='#fff';x.lineWidth=2;x.setLineDash([]);
+ [30,50].forEach(q=>{x.beginPath();x.arc(C,C,q*S,0,7);x.stroke()});
+ x.setLineDash([10,10]);x.strokeStyle='#ffd43b';x.beginPath();x.arc(C,C,40*S,0,7);x.stroke();x.setLineDash([]);
+ x.setLineDash([4,4]);x.strokeStyle='#fff';x.beginPath();x.moveTo(C,C);x.lineTo(C-30*S,C);x.stroke();x.setLineDash([]);
+ lab('30 m',C-15*S,C-6);
+ x.fillStyle='#fff';x.beginPath();x.arc(C,C,5,0,7);x.fill();lab('O (pusat)',C,C+22);
+ let cx=C+R*S*Math.cos(th),cy=C+R*S*Math.sin(th),hd=th+Math.PI/2;
+ if(slip){cx=px;cy=py;hd+=sp}
+ if(!slip){
+  x.setLineDash([6,5]);x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.moveTo(C,C);x.lineTo(cx,cy);x.stroke();x.setLineDash([]);
+  lab('r = 40 m',C+(cx-C)*.5+ (Math.abs(cx-C)<30?28:0),C+(cy-C)*.5-8);
+ }
+ x.save();x.translate(cx,cy);x.rotate(hd);
+ x.fillStyle=slip?'#d62828':'#e8590c';x.beginPath();x.roundRect(-17,-8,34,16,4);x.fill();
+ x.fillStyle='#bfe3ff';x.fillRect(3,-6,8,12);x.fillStyle='#fff3bf';x.fillRect(15,-6,2,3);x.fillRect(15,3,2,3);
+ x.restore();
+ if(!slip){
+  const q=Math.min(m*v*v/R/(mu*m*g),1.6),L=26+34*q,tx=-Math.sin(th),ty=Math.cos(th),vl=18+v*2.2;
+  arrow(cx,cy,cx-Math.cos(th)*L,cy-Math.sin(th)*L,'#ffd43b');
+  arrow(cx,cy,cx+tx*vl,cy+ty*vl,'#4dabf7');
+  lab('f gesek',cx-Math.cos(th)*(L+6),cy-Math.sin(th)*(L+6)-4);
+  lab('v',cx+tx*(vl+12),cy+ty*(vl+12)+4);
+ }
+ if(slip)lab('TERGELINCIR! 💥 keluar jalur lurus (arah garis singgung)',C,34);
+ else lab(v<=VM+.005?'Mobil tetap di jalur ✅':'Menuju batas...',C,34);
+}
+function tick(ts){
+ const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
+ if(!slip){th+=v/R*dt*K;run+=dt;
+  if(v>VM+.005&&run>1.4){slip=true;px=C+R*S*Math.cos(th);py=C+R*S*Math.sin(th);sp=0}}
+ else{px+=-Math.sin(th)*v*S*dt*K;py+=Math.cos(th)*v*S*dt*K;sp+=dt*1.5;
+  if(px<-40||px>520||py<-40||py>520){wait+=dt;if(wait>.8){slip=false;run=0;wait=0;th=-Math.PI/2}}}
+ draw();requestAnimationFrame(tick);
+}
+const ST=[
+['1 · Siapa yang membelokkan mobil?','Agar mobil <b>berbelok</b>, harus ada gaya yang menarik mobil <b>ke arah pusat lingkaran</b>, namanya gaya sentripetal.<div class="f">F<sub>s</sub> = m v² / r</div>Di jalan datar tidak ada tali atau mesin yang melakukannya. Yang bekerja adalah <b>gesekan statis</b> ban dengan jalan (panah kuning). Analogi: seperti genggaman tangan yang menahan benda agar tidak terlempar.'],
+['2 · Gesekan punya batas','Genggaman ban bisa lepas. Gesekan statis punya nilai maksimum:<div class="f">f<sub>maks</sub> = μ N = μ m g</div>(di jalan datar N = m g). Agar <b>tidak keluar jalur</b>, gaya yang dibutuhkan tidak boleh melebihi gesekan maksimum:<div class="f">m v² / r ≤ μ m g</div>Bandingkan dua batang biru dan oranye di atas.'],
+['3 · Massa saling habis','Massa <b>m</b> ada di kedua ruas, jadi bisa dicoret:<div class="f">v² ≤ μ g r &nbsp;→&nbsp; v<sub>maks</sub> = <span class="rad">μ g r</span></div>Artinya mobil ringan maupun berat punya <b>batas kecepatan yang sama</b>. Coba geser slider massa: batas aman tidak berubah!'],
+['4 · Masukkan angka','<div class="f">v<sub>maks</sub> = √<span class="rad">0,5 × 10 × 40</span> = √200 = √(100×2) = <b>10√2 m/s</b></div>Sekitar 14,1 m/s atau 51 km/jam. Mobil sedang diatur tepat di batas.<div class="ans card" style="margin:10px 0 0">Jawaban: <span style="color:var(--ok)">A. 10√2 m/s ✅</span></div><p class="note"><b>Catatan guru:</b> gambar hanya menulis 30 m (jarak pusat ke tepi dalam jalan). Pembahasan memakai r = 40 m untuk posisi M. Jika r = 30 m, hasilnya √150 ≈ 12,2 m/s dan tidak ada di pilihan, jadi perlu dicocokkan dengan soal aslinya.</p>']
+];
+function show(i){
+ step=Math.max(0,Math.min(ST.length-1,i));
+ const b=$('sb');b.style.animation='none';void b.offsetWidth;b.style.animation='';
+ b.innerHTML='<h3 style="margin:0 0 6px">'+ST[step][0]+'</h3>'+ST[step][1];
+ $('dt').innerHTML=ST.map((_,k)=>'<i class="'+(k==step?'on':'')+'"></i>').join('');
+ $('pv').disabled=step==0;$('nx').disabled=step==ST.length-1;
+ if(step==3)setV(14.1);
+}
+function setV(n){v=n;$('v').value=n;upd()}
+$('v').oninput=e=>{v=+e.target.value;upd()};
+$('m').oninput=e=>{m=+e.target.value;upd()};
+$('b1').onclick=()=>setV(10);$('b2').onclick=()=>setV(14.1);$('b3').onclick=()=>setV(18);
+$('pv').onclick=()=>show(step-1);$('nx').onclick=()=>show(step+1);
+upd();show(0);requestAnimationFrame(tick);
+(function(){
+function tab(n){$('p1').hidden=n!=1;$('p2').hidden=n!=2;$('t1').className=n==1?'p':'';$('t2').className=n==2?'p':'';try{history.replaceState(null,'',n==2?'#yoyo':'#tikungan')}catch(e){}}
+$('t1').onclick=()=>tab(1);$('t2').onclick=()=>tab(2);
+onhashchange=()=>tab(location.hash=='#yoyo'?2:1);if(location.hash=='#yoyo')tab(2);
+const c=$('c2'),y=c.getContext('2d');c.width=960;c.height=600;y.scale(2,2);
+const Rm=.1,PX=500,OX=40,FY=250,TS=.45,Rp=Rm*PX;
+let V=.3,rc=5,phi=0,lt=0,s2=0;
+const xa=Rp/Math.tan(75*Math.PI/360),xb=Rp/Math.tan(20*Math.PI/360);let X=xa;
+function ar(a,b,c2,e,col){const q=Math.atan2(e-b,c2-a);y.strokeStyle=y.fillStyle=col;y.lineWidth=3.5;y.beginPath();y.moveTo(a,b);y.lineTo(c2,e);y.stroke();y.beginPath();y.moveTo(c2,e);y.lineTo(c2-9*Math.cos(q-.45),e-9*Math.sin(q-.45));y.lineTo(c2-9*Math.cos(q+.45),e-9*Math.sin(q+.45));y.fill()}
+function tx(t,a,b,al){y.font='bold 12px system-ui,sans-serif';y.textAlign=al||'center';y.lineWidth=3.5;y.strokeStyle='rgba(0,0,0,.65)';y.strokeText(t,a,b);y.fillStyle='#fff';y.fillText(t,a,b)}
+function d(){
+ const rp=rc/100*PX,th=2*Math.atan(Rp/X),cx=OX+X,cy=FY-Rp,rt=Rm/(Rm+rc/100);
+ y.clearRect(0,0,480,300);y.fillStyle='#cfe3f7';y.fillRect(0,0,480,FY);y.fillStyle='#8d6e63';y.fillRect(0,FY,480,50);
+ y.lineCap='round';y.strokeStyle='#4b5563';y.lineWidth=8;y.beginPath();y.moveTo(OX,FY);y.lineTo(OX+560*Math.cos(th),FY-560*Math.sin(th));y.stroke();y.lineCap='butt';
+ y.fillStyle='#ffd8a8';y.strokeStyle='#e8590c';y.lineWidth=3;y.beginPath();y.arc(cx,cy,Rp,0,7);y.fill();y.stroke();
+ y.fillStyle='#ffa94d';y.beginPath();y.arc(cx,cy,rp,0,7);y.fill();y.stroke();
+ y.lineWidth=2;for(let k=0;k<4;k++){const a=phi+k*Math.PI/2;y.beginPath();y.moveTo(cx,cy);y.lineTo(cx+(Rp-3)*Math.cos(a),cy+(Rp-3)*Math.sin(a));y.stroke()}
+ y.setLineDash([6,5]);y.strokeStyle='#2b9348';y.lineWidth=2.5;y.beginPath();y.moveTo(OX,FY);y.lineTo(cx,cy);y.stroke();y.setLineDash([]);
+ tx('θ/2',OX+X*.5,FY-Rp*.5-10);
+ const Lv=V*300,top=cy-rp;
+ y.strokeStyle='#e03131';y.lineWidth=2.5;y.beginPath();y.moveTo(cx,top);y.lineTo(cx+20+Lv,top);y.stroke();
+ ar(cx+Lv,top,cx+20+Lv,top,'#e03131');tx('v',cx+Lv+32,top+4);
+ ar(cx,cy,cx+Lv*rt,cy,'#2b9348');tx('v pusat',cx+Lv*rt+6,cy+4,'left');
+ y.fillStyle='#e8590c';y.beginPath();y.arc(cx,cy,4,0,7);y.fill();
+ y.fillStyle='#fff';y.beginPath();y.arc(cx,FY,4,0,7);y.fill();y.beginPath();y.arc(OX,FY,6,0,7);y.fill();y.beginPath();y.arc(OX+X*Math.cos(th),FY-X*Math.sin(th),4,0,7);y.fill();
+ tx('titik kontak (diam sesaat)',cx,FY+18);tx('O',OX-12,FY-8);
+ y.strokeStyle='#fff';y.lineWidth=2;y.beginPath();y.arc(OX,FY,40,-th,0);y.stroke();tx('θ',OX+54*Math.cos(th/2),FY-54*Math.sin(th/2)+4);
+ y.beginPath();y.moveTo(OX,FY+30);y.lineTo(cx,FY+30);y.stroke();tx('x = R cot(θ/2)',(OX+cx)/2,FY+46);
+ const w=-2*V*Math.pow(Math.sin(th/2),2)/(Rm+rc/100);
+ $('o2').innerHTML='<span class=chip>θ = '+fm(th*180/Math.PI,0)+'°</span><span class=chip>x = '+fm(X/PX*100,1)+' cm</span><span class=chip>v pusat = '+fm(V*rt,2)+' m/s</span><span class=chip>dθ/dt = '+fm(w,2).replace('-','−')+' rad/s</span>';
+}
+function f(ts){const dt=Math.min(.05,(ts-lt)/1000||0);lt=ts;
+ if(!$('p2').hidden){const dx=V*Rm/(Rm+rc/100)*PX*dt*TS;X+=dx;phi+=dx/Rp;if(X>xb){X=xa;phi=0}d()}
+ requestAnimationFrame(f)}
+function lb(){$('v2t').textContent=fm(V,2)+' m/s';$('r2t').textContent=rc+' cm (R = 10 cm)'}
+$('v2').oninput=e=>{V=+e.target.value;lb()};$('r2').oninput=e=>{rc=+e.target.value;lb()};lb();
+const ST2=[
+['1 · Hubungan θ dengan posisi yoyo','Yoyo menyinggung <b>lantai</b> dan <b>batang</b>, jadi pusat yoyo berjarak R dari keduanya. Pusat berada pada <b>garis bagi sudut θ</b> (garis hijau putus-putus), sehingga membentuk sudut θ/2 dengan lantai. Pada segitiga siku-siku engsel O, titik kontak, dan pusat yoyo:<div class="f">tan(θ/2) = R / x &nbsp;→&nbsp; x = R cot(θ/2)</div>x adalah jarak mendatar dari engsel O ke titik kontak. Perhatikan: yoyo bergeser ke kanan ⇒ θ mengecil.'],
+['2 · Kecepatan pusat dari kecepatan benang','Yoyo menggelinding tanpa slip, jadi titik kontak dengan meja <b>diam sesaat</b> dan menjadi pusat putaran sesaat. Kecepatan tiap titik = ω × jaraknya ke titik kontak.<div class="f">v<sub>pusat</sub> = ω R</div><div class="f">v = ω (R + r)</div>Benang ditarik dari bagian atas lingkaran dalam, berjarak R + r dari titik kontak. Bagi kedua persamaan untuk menghilangkan ω:<div class="f">v<sub>pusat</sub> = v R / (R + r)</div>'],
+['3 · Hubungkan dengan perubahan sudut','Kecepatan pusat yoyo adalah laju perubahan posisi x terhadap waktu. Turunkan x = R cot(θ/2). Ingat turunan cot u adalah −1/sin²u, dan aturan rantai (u = θ/2, du/dt = ½ dθ/dt):<div class="f">v<sub>pusat</sub> = dx/dt = −R / (2 sin²(θ/2)) · dθ/dt</div>'],
+['4 · Samakan dan selesaikan','<div class="f">−R / (2 sin²(θ/2)) · dθ/dt = v R / (R + r)</div><div class="f">dθ/dt = −2v sin²(θ/2) / (R + r)</div><div class="ans card" style="margin:10px 0 0">Jawaban: <span style="color:var(--ok)">E ✅</span></div><p class="note"><b>Arti tanda minus:</b> saat yoyo bergerak ke kanan, sudut θ antara batang dan lantai makin kecil (batang makin rebah), jadi dθ/dt bernilai negatif. <b>Cek kasus r → 0:</b> benang ditarik dari pusat yoyo, v pusat = v, dan dθ/dt = −2v sin²(θ/2) / R.</p>']];
+function sh(i){s2=Math.max(0,Math.min(3,i));const b=$('sb2');b.style.animation='none';void b.offsetWidth;b.style.animation='';b.innerHTML='<h3 style="margin:0 0 6px">'+ST2[s2][0]+'</h3>'+ST2[s2][1];$('dt2').innerHTML=ST2.map((_,k)=>'<i class="'+(k==s2?'on':'')+'"></i>').join('');$('pv2').disabled=s2==0;$('nx2').disabled=s2==3}
+$('pv2').onclick=()=>sh(s2-1);$('nx2').onclick=()=>sh(s2+1);sh(0);requestAnimationFrame(f);
+})();
+</script></body></html>
